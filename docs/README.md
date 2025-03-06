@@ -1,6 +1,6 @@
 # DegenDuel MCP Server Documentation
 
-A Model Context Protocol (MCP) server providing powerful AI tools for development workflows. This server implements three core tools to enhance coding and design processes through AI-assisted capabilities.
+A Model Context Protocol (MCP) server providing powerful AI tools for development workflows. This server implements three core tools to enhance coding and design processes through AI-assisted capabilities. The server works with both Cursor and Claude Code.
 
 ## Table of Contents
 
@@ -18,6 +18,7 @@ A Model Context Protocol (MCP) server providing powerful AI tools for developmen
   - [With Claude Code](#with-claude-code)
   - [With Cursor](#with-cursor)
 - [Development](#development)
+- [Logging System](#logging-system)
 - [Troubleshooting](#troubleshooting)
 
 ## Overview
@@ -30,7 +31,7 @@ DegenDuel MCP Server is a specialized AI tool provider that implements the Model
 
 The server can run in two modes:
 - **Stdio Mode**: Used for direct integration with Claude Code or Cursor
-- **HTTP Mode**: For remote access, automations, and custom integrations
+- **HTTP Mode**: For remote access, automations, and custom integrations (enabled by default)
 
 ## Installation
 
@@ -71,14 +72,15 @@ All configuration is stored in the `src/env` directory:
 - **config.ts**: Server configuration (port, HTTP mode, etc.)
 - **keys.ts**: API keys for external services
 - **ai.ts**: AI model configuration for tools
+- **logger.ts**: Colorful logging utilities
 
 ### Key Settings
 
 In `src/env/config.ts`:
 
 ```typescript
-// Enable/disable HTTP mode
-const HTTP_MODE_ENABLED = true/false;
+// Enable/disable HTTP mode (enabled by default)
+const HTTP_MODE_ENABLED = true;
 
 // Server port (used for both HTTP mode and relative URLs in tools)
 const PORT = 3333;
@@ -221,6 +223,12 @@ npm run start
 
 # Run with PM2 for production deployment
 npm run pm2
+
+# Other useful PM2 commands
+npm run stop        # Stop and delete PM2 server
+npm run restart     # Restart PM2 server and show logs
+npm run logs        # View PM2 logs
+npm run status      # Check PM2 status
 ```
 
 ### HTTP Mode
@@ -313,20 +321,37 @@ degenduel-mcp/
 ```bash
 # Watch mode for development
 npm run dev
+npm run dev:http    # HTTP mode
 
 # Build only
 npm run build-only
 
 # Start the server
 npm run start
+npm run start:http  # HTTP mode
 
 # PM2 commands
-npm run pm2         # Start with PM2
-npm run stop        # Stop PM2 server
-npm run restart     # Restart PM2 server
+npm run pm2         # Start with PM2 (1 instance)
+npm run pm2:http    # Start with PM2 in HTTP mode
+npm run stop        # Stop and delete PM2 server
+npm run stop:http   # Stop and delete HTTP PM2 server
+npm run cleanup-mcp # Delete all MCP PM2 processes
+npm run restart     # Restart PM2 server and show logs
+npm run restart:http # Restart HTTP PM2 server and show logs
 npm run logs        # View PM2 logs
+npm run logs:http   # View HTTP PM2 logs
 npm run status      # Check PM2 status
 ```
+
+## Logging System
+
+DegenDuel MCP Server includes a comprehensive colored logging system for better debugging and operational monitoring. See [Logging Documentation](logging.md) for details.
+
+Key features:
+- Color-coded log levels (info, success, warning, error)
+- Enhanced visibility with emoji indicators
+- Rainbow text for major system events
+- Tool-specific detailed logging
 
 ## Troubleshooting
 

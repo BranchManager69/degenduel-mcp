@@ -69,15 +69,20 @@ The tool returns a multi-part response:
 
 ## Implementation Details
 
-The Screenshot tool uses Puppeteer, a headless Chrome browser, to render and capture web pages. The implementation:
+The Screenshot tool uses Puppeteer, a headless Chrome browser, to render and capture web pages. The implementation includes robust fallback mechanisms:
 
 1. Validates input parameters
 2. Constructs the target URL from either direct URL or relative path
-3. Launches a headless browser
-4. Navigates to the target URL
-5. Takes a full-page screenshot
-6. Saves the image to the specified path
-7. Returns the image as base64 data
+3. Primary Method (Puppeteer):
+   - Launches a headless browser with optimized settings
+   - Navigates to the target URL
+   - Takes a full-page screenshot
+4. Fallback Method (if Puppeteer fails):
+   - Attempts to use wkhtmltoimage if available
+   - Falls back to generating a simple HTML page with URL information
+5. Saves the image to the specified path
+6. Returns the image as base64 data
+7. Provides detailed logging throughout the process
 
 ## Configuration
 

@@ -157,10 +157,10 @@ export async function runScreenshotTool(
   log.info(`💾 Saving screenshot...`);
   await fs.promises.writeFile(fullPathToScreenshot, screenshotBuffer);
   
-  // Return the base64 representation and file path
-  const base64Image = screenshotBuffer.toString('base64');
-  
   log.success(`✨ Screenshot captured successfully! (${Math.round(screenshotBuffer.length / 1024)}KB)`);
+  
+  // Convert buffer to base64
+  const base64Image = screenshotBuffer.toString('base64');
   
   return {
     content: [
@@ -170,9 +170,8 @@ export async function runScreenshotTool(
       },
       {
         type: "image",
-        image_url: {
-          url: `data:image/png;base64,${base64Image}`
-        }
+        data: base64Image,
+        mimeType: "image/png"
       }
     ],
   };

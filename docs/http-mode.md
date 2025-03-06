@@ -15,11 +15,11 @@ HTTP mode uses Server-Sent Events (SSE) for real-time communication and standard
 
 ## Enabling HTTP Mode
 
-HTTP mode is disabled by default for security reasons. To enable it:
+HTTP mode is enabled by default for convenience. If you need to disable it:
 
 1. Edit `src/env/config.ts`:
    ```typescript
-   const HTTP_MODE_ENABLED = true;
+   const HTTP_MODE_ENABLED = false;
    ```
 
 2. Specify the desired port (default is 3333):
