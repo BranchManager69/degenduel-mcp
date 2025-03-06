@@ -18,3 +18,6 @@ logs/
 coverage/
 *.lcov
 src/env/
+
+.claude
+CLAUDE.md

@@ -85,7 +85,7 @@ src/
 │   └── codeReview.ts   # Code review tool
 ├── env/
 │   └── keys.ts         # Environment configuration (add your API keys here!)
-└── index.ts           # Main entry point
+└── index.ts            # Main entry point
 ```
 
 ## 🤝 Contributing
