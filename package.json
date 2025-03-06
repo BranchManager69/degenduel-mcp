@@ -4,24 +4,38 @@
   "description": "MCP Server with three Cursor Tools: Screenshot, Architect, and Code Review",
   "type": "module",
   "scripts": {
-    "build": "tsc && chmod +x build/index.js",
-    "start": "node build/index.js",
     "dev": "tsc -w & nodemon --watch build --exec \"node build/index.js\"",
-    "pm2": "npm run build && pm2 start build/index.js --name mcp-server -f"
+    "dev:http": "tsc -w & nodemon --watch build --exec \"node build/index.js --http\"",
+    "pm2": "npm run build-only && pm2 start build/index.js --name mcp-server -f",
+    "pm2:http": "npm run build-only && pm2 start build/index.js --name mcp-server-http -f -- --http",
+    "build-only": "tsc && chmod +x build/index.js",
+    "start": "node build/index.js",
+    "start:http": "node build/index.js --http",
+    "stop": "pm2 stop mcp-server",
+    "stop:http": "pm2 stop mcp-server-http",
+    "restart": "npm run stop && npm run pm2",
+    "restart:http": "npm run stop:http && npm run pm2:http",
+    "logs": "pm2 logs mcp-server",
+    "logs:http": "pm2 logs mcp-server-http",
+    "status": "pm2 status mcp-server"
   },
   "bin": {
-    "ai-tools": "./build/index.js",
-    "mcp-tools": "./build/index.js",
     "mcp-server": "./build/index.js",
+    "mcp-tools": "./build/index.js",
     "mcp": "./build/index.js"
   },
   "dependencies": {
-    "@modelcontextprotocol/sdk": "^1.4.1",
+    "@modelcontextprotocol/sdk": "^1.6.1",
+    "chalk": "^5.4.1",
+    "cors": "^2.8.5",
+    "express": "^4.21.2",
     "openai": "^4.82.0",
     "puppeteer": "^24.1.1",
     "zod": "^3.24.1"
   },
   "devDependencies": {
+    "@types/cors": "^2.8.17",
+    "@types/express": "^4.17.21",
     "@types/node": "^22.13.0",
     "nodemon": "^3.1.1",
     "typescript": "^5.7.3"

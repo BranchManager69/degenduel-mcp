@@ -37,10 +37,26 @@ npm install
 yarn install
 ```
 
-### 3. Build the Server
+### 3. Development & Build Commands
 
 ```bash
-npm run build
+# Build the server
+npm run build-only
+
+# Development mode (watch for changes)
+npm run dev
+
+# Run the server
+npm run start
+
+# Deploy with PM2
+npm run pm2
+
+# Other PM2 commands
+npm run stop      # Stop the server
+npm run restart   # Restart the server
+npm run logs      # View server logs
+npm run status    # Check server status
 ```
 
 ### 4. Adding to Cursor
@@ -53,7 +69,7 @@ This project is designed to be used as an MCP server in Cursor. Here's how to se
 4. Fill out the form:
    - **Name**: AI Development Assistant
    - **Type**: stdio
-   - **Command**: `node /path/to/your/project/dist/index.js`
+   - **Command**: `node /path/to/your/project/build/index.js`
 
 > 📘 **Pro Tip**: You might need to use the full path to your project's built index.js file.
 

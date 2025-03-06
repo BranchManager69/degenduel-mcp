@@ -1,6 +1,4 @@
-import { z } from "zod";
-import OpenAI from "openai";
-import { OPENAI_API_KEY } from "../env/keys.js";
+// src/tools/architect.ts
 
 /**
  * Architect tool
@@ -8,10 +6,17 @@ import { OPENAI_API_KEY } from "../env/keys.js";
  *   - Input: 'task' (description of the task), 'code' (one or more code files concatenated)
  */
 
+import { z } from "zod";
+//import { PORT } from "../env/config.js";
+import OpenAI from "openai";
+import { OPENAI_API_KEY } from "../env/keys.js";
+import { MODEL_FOR_TOOL_ARCHITECT } from "../env/ai.js";
+
+
+// Define the tool name, description, and schema
 export const architectToolName = "architect";
 export const architectToolDescription =
   "Analyzes a task description plus some code, then outlines steps for an AI coding agent.";
-
 export const ArchitectToolSchema = z.object({
   task: z.string().min(1, "Task description is required."),
   code: z
@@ -19,6 +24,8 @@ export const ArchitectToolSchema = z.object({
     .min(1, "Code string is required (one or more files concatenated)."),
 });
 
+// Run the Architect tool
+// TODO: add a timeout
 export async function runArchitectTool(
   args: z.infer<typeof ArchitectToolSchema>,
 ) {
@@ -35,7 +42,7 @@ export async function runArchitectTool(
 
   try {
     const response = await openai.chat.completions.create({
-      model: "o3-mini-2025-01-31",
+      model: MODEL_FOR_TOOL_ARCHITECT,
       messages: [
         { role: "system", content: systemPrompt },
         { role: "user", content: userPrompt },
