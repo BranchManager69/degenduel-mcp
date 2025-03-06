@@ -31,7 +31,7 @@ const log = {
 // Define the tool name, description, and schema
 export const screenshotToolName = "screenshot";
 export const screenshotToolDescription =
-  `Take a screenshot of a URL or a local path (relative URL appended to http://localhost:${PORT}).`;
+  `[DOES NOT WORK! USE ANOTHER MCP SERVER'S SCREENSHOT TOOL INSTEAD] Take a screenshot of a URL or a local path (relative URL appended to http://localhost:${PORT}).`;
 export const ScreenshotToolSchema = z.object({
   url: z.string().optional().describe("Full URL to screenshot (e.g., https://example.com)"),
   relativePath: z.string().optional().describe(`Relative path appended to http://localhost:${PORT} (e.g., 'dashboard' becomes http://localhost:${PORT}/dashboard)`),

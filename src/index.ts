@@ -30,6 +30,7 @@ import { CallToolRequestSchema, ListToolsRequestSchema,
 import { screenshotToolName, screenshotToolDescription, ScreenshotToolSchema, runScreenshotTool } from "./tools/screenshot.js";
 import { architectToolName, architectToolDescription, ArchitectToolSchema, runArchitectTool } from "./tools/architect.js";
 import { codeReviewToolName, codeReviewToolDescription, CodeReviewToolSchema, runCodeReviewTool } from "./tools/codeReview.js";
+import { apiTestGeneratorToolName, apiTestGeneratorToolDescription, APITestGeneratorSchema, runAPITestGenerator } from "./tools/apiTestGenerator.js";
 // Environment
 import { HTTP_MODE_ENABLED, PORT } from "./config/config.js";
 import logger from "./utils/logger.js";
@@ -110,6 +111,57 @@ server.setRequestHandler(ListToolsRequestSchema, async () => {
           required: ["folderPath"],
         },
       },
+      {
+        name: apiTestGeneratorToolName,
+        description: apiTestGeneratorToolDescription,
+        inputSchema: {
+          type: "object",
+          properties: {
+            spec: {
+              type: "string",
+              description: "API specification (Swagger/OpenAPI) or API endpoint code",
+            },
+            framework: {
+              type: "string",
+              description: "Test framework to use (jest, mocha, chai, supertest, playwright, cypress)",
+              enum: ["jest", "mocha", "chai", "supertest", "playwright", "cypress"],
+              default: "jest",
+            },
+            outputFormat: {
+              type: "string",
+              description: "Output format (javascript or typescript)",
+              enum: ["javascript", "typescript"],
+              default: "javascript",
+            },
+            testDir: {
+              type: "string",
+              description: "Directory to save the generated test files (optional)",
+            },
+            endpoints: {
+              type: "array",
+              items: {
+                type: "string"
+              },
+              description: "Specific endpoints to focus on (optional)",
+            },
+            currentFilePath: {
+              type: "string",
+              description: "Path to the currently open file for context awareness",
+            },
+            contextType: {
+              type: "string",
+              description: "What type of context to focus on (file, endpoint, folder)",
+              enum: ["file", "endpoint", "folder"],
+              default: "file"
+            },
+            projectRoot: {
+              type: "string",
+              description: "Root directory of the project for better path resolution",
+            },
+          },
+          required: ["spec"],
+        },
+      },
     ],
   };
 });
@@ -141,6 +193,14 @@ server.setRequestHandler(CallToolRequestSchema, async (request) => {
       const validated = CodeReviewToolSchema.parse(args);
       const result = await runCodeReviewTool(validated);
       logger.success(`Code review completed successfully!`);
+      return result;
+    }
+    // API Test Generator tool
+    case apiTestGeneratorToolName: {
+      logger.highlight(`🧪 Generating API tests for: ${args?.spec ? 'API Spec/Code' : 'Unknown API'}`);
+      const validated = APITestGeneratorSchema.parse(args);
+      const result = await runAPITestGenerator(validated);
+      logger.success(`API test generation completed successfully!`);
       return result;
     }
     default:
