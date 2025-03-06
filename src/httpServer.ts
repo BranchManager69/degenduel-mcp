@@ -3,7 +3,7 @@ import express from 'express';
 import cors from 'cors';
 import { Server } from "@modelcontextprotocol/sdk/server/index.js";
 import { SSEServerTransport } from "@modelcontextprotocol/sdk/server/sse.js";
-import { PORT } from './env/config.js';
+import { PORT } from './config/config.js';
 
 export function startHttpServer(mcpServer: Server, port: number = PORT) {
   const app = express();

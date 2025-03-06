@@ -31,8 +31,8 @@ import { screenshotToolName, screenshotToolDescription, ScreenshotToolSchema, ru
 import { architectToolName, architectToolDescription, ArchitectToolSchema, runArchitectTool } from "./tools/architect.js";
 import { codeReviewToolName, codeReviewToolDescription, CodeReviewToolSchema, runCodeReviewTool } from "./tools/codeReview.js";
 // Environment
-import { HTTP_MODE_ENABLED, PORT } from "./env/config.js";
-import logger from "./env/logger.js";
+import { HTTP_MODE_ENABLED, PORT } from "./config/config.js";
+import logger from "./utils/logger.js";
 
 
 /*========== BRANCH MANAGER's MCP SERVER ==========*/

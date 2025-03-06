@@ -10,7 +10,7 @@ import puppeteer from "puppeteer";
 import { z } from "zod";
 import path from "path";
 import fs from "fs";
-import { PORT } from "../env/config.js";
+import { PORT } from "../config/config.js";
 import chalk from 'chalk';
 import { exec } from 'child_process';
 import { promisify } from 'util';

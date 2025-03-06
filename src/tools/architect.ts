@@ -10,7 +10,7 @@ import { z } from "zod";
 //import { PORT } from "../env/config.js";
 import OpenAI from "openai";
 import { OPENAI_API_KEY } from "../env/keys.js";
-import { MODEL_FOR_TOOL_ARCHITECT } from "../env/ai.js";
+import { MODEL_FOR_TOOL_ARCHITECT } from "../config/ai.js";
 
 
 // Define the tool name, description, and schema
@@ -35,7 +35,7 @@ export async function runArchitectTool(
   });
 
   const { task, code } = args;
-  const systemPrompt = `You are an expert software architect. Given a task and some code, outline the steps that an AI coding agent should take to complete or improve the code.`;
+  const systemPrompt = `You are an expert software architect. Given a task and some code, outline the steps that the highly-capable Claude AI Coding Agent should take to complete or improve the code.`;
 
   // We'll prompt the model with both the task and code
   const userPrompt = `Task: ${task}\n\nCode:\n${code}\n\nPlease provide a step-by-step plan.`;
