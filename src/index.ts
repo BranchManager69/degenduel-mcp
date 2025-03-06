@@ -32,7 +32,7 @@ import { architectToolName, architectToolDescription, ArchitectToolSchema, runAr
 import { codeReviewToolName, codeReviewToolDescription, CodeReviewToolSchema, runCodeReviewTool } from "./tools/codeReview.js";
 // Environment
 import { HTTP_MODE_ENABLED, PORT } from "./env/config.js";
-import { MODEL_FOR_TOOL_SCREENSHOT, MODEL_FOR_TOOL_ARCHITECT, MODEL_FOR_TOOL_CODE_REVIEW } from "./env/ai.js";
+import logger from "./env/logger.js";
 
 
 /*========== BRANCH MANAGER's MCP SERVER ==========*/
@@ -52,6 +52,7 @@ const server = new Server(
 
 // 2. Define the list of tools
 server.setRequestHandler(ListToolsRequestSchema, async () => {
+  logger.info("Listing available tools");
   return {
     tools: [
       {
@@ -120,20 +121,30 @@ server.setRequestHandler(CallToolRequestSchema, async (request) => {
   switch (name) {
     // Screenshot tool
     case screenshotToolName: {
+      logger.highlight(`📸 Taking screenshot with args: ${JSON.stringify(args)}`);
       const validated = ScreenshotToolSchema.parse(args);
-      return await runScreenshotTool(validated);
+      const result = await runScreenshotTool(validated);
+      logger.success(`Screenshot captured successfully!`);
+      return result;
     }
     // Architect tool
     case architectToolName: {
+      logger.highlight(`🏗️ Running architect tool with task: ${typeof args?.task === 'string' ? args.task.substring(0, 50) + '...' : 'No task provided'}`);
       const validated = ArchitectToolSchema.parse(args);
-      return await runArchitectTool(validated);
+      const result = await runArchitectTool(validated);
+      logger.success(`Architect tool completed successfully!`);
+      return result;
     }
     // Code Review tool
     case codeReviewToolName: {
+      logger.highlight(`🔍 Running code review for: ${args?.folderPath || 'Unknown folder'}`);
       const validated = CodeReviewToolSchema.parse(args);
-      return await runCodeReviewTool(validated);
+      const result = await runCodeReviewTool(validated);
+      logger.success(`Code review completed successfully!`);
+      return result;
     }
     default:
+      logger.error(`Unknown tool: ${name}`);
       throw new Error(`Unknown tool: ${name}`);
   }
 });
@@ -148,6 +159,8 @@ async function main() {
   const useHttp = httpModeEnabled && httpRequested;
   const port = PORT; // Get port from config.ts
   
+  logger.rainbow(`.========== DegenDuel MCP Server Starting ============.`);
+  
   if (useHttp) {
     // Only import HTTP server if we're actually using it
     const { startHttpServer } = await import('./httpServer.js');
@@ -155,22 +168,29 @@ async function main() {
     // Start with HTTP/SSE transport
     const transport = startHttpServer(server, port);
     await server.connect(transport);
-    console.error(`===== DegenDuel MCP Server running on HTTP at port ${port} =====`);
+    logger.success(`MCP Server running on HTTP at port ${port}`);
+    logger.info(`Server URL: http://localhost:${port}`);
   } else {
     // If HTTP was requested but not enabled, show a message
     if (httpRequested && !httpModeEnabled) {
-      console.error("HTTP mode is currently disabled. In env/config.ts, set HTTP_MODE_ENABLED to true to enable it.");
+      logger.warning("HTTP mode is currently disabled. In env/config.ts, set HTTP_MODE_ENABLED to true to enable it.");
     }
     
     // Start with stdio transport (default for Cursor)
     const transport = new StdioServerTransport();
+    const transportMode = useHttp ? "HTTP" : "stdio";
     await server.connect(transport);
-    console.error(`\n===== DegenDuel MCP Server running ===== \n\tTransport: \tstdio \n\tPort: \t\t${port} \n========================================`);
+    
+    logger.success(`MCP Server running on ${transportMode} transport`);
+    logger.info(`Port configured: ${port} (for screenshot tool)`);
   }
+  
+  // end of startup message
+  logger.rainbow(`'====================================================='\n\n`);
 }
 
 // Run the MCP server
 main().catch((error) => {
-  console.error(`\n\nFATAL ERROR:\n\t${error}\n\n`);
+  logger.error(`FATAL ERROR: ${error}`);
   process.exit(1);
 });
