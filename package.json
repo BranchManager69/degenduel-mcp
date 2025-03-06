@@ -4,11 +4,16 @@
   "description": "MCP Server with three Cursor Tools: Screenshot, Architect, and Code Review",
   "type": "module",
   "scripts": {
-    "build": "tsc && node -e \"require('fs').chmodSync('build/index.js', '755')\"",
-    "start": "node build/index.js"
+    "build": "tsc && chmod +x build/index.js",
+    "start": "node build/index.js",
+    "dev": "tsc -w & nodemon --watch build --exec \"node build/index.js\"",
+    "pm2": "npm run build && pm2 start build/index.js --name mcp-server -f"
   },
   "bin": {
-    "cursor-tools": "./build/index.js"
+    "ai-tools": "./build/index.js",
+    "mcp-tools": "./build/index.js",
+    "mcp-server": "./build/index.js",
+    "mcp": "./build/index.js"
   },
   "dependencies": {
     "@modelcontextprotocol/sdk": "^1.4.1",
@@ -18,6 +23,7 @@
   },
   "devDependencies": {
     "@types/node": "^22.13.0",
+    "nodemon": "^3.1.1",
     "typescript": "^5.7.3"
   }
 }
