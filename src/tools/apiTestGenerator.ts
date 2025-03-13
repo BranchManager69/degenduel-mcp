@@ -15,7 +15,7 @@ import path from "path";
 import logger from "../utils/logger.js";
 
 // Define the tool name, description, and schema
-export const apiTestGeneratorToolName = "apiTestGenerator";
+export const apiTestGeneratorToolName = "apitests";
 export const apiTestGeneratorToolDescription =
   "Analyzes API specifications or endpoint code and generates comprehensive test suites with edge cases, validations, and mocked dependencies.";
 
